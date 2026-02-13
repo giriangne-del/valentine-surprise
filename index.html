@@ -37,9 +37,9 @@
                              0 0 20px #8a2be2;
             }
             to {
-                text-shadow: 0 0 10px #ff00ff,
-                             0 0 20px #ff00ff,
-                             0 0 30px #8a2be2;
+                text-shadow: 0 0 15px #ff00ff,
+                             0 0 25px #ff00ff,
+                             0 0 35px #8a2be2;
             }
         }
 
@@ -65,20 +65,20 @@
             border-radius: 12px;
             cursor: pointer;
             position: absolute;
-            transition: 0.3s;
+            transition: all 0.3s ease;
         }
 
         #yesBtn {
             background-color: #28a745;
             color: white;
-            left: 20%;
+            left: 25%;
             top: 50%;
         }
 
         #noBtn {
             background-color: #dc3545;
             color: white;
-            right: 20%;
+            left: 60%;
             top: 50%;
         }
     </style>
@@ -93,16 +93,34 @@
 
 <div class="button-container">
     <button id="yesBtn" onclick="sayYes()">Yes</button>
-    <button id="noBtn" onmouseover="moveButton()">No</button>
+    <button id="noBtn" onmouseover="handleNo()" ontouchstart="handleNo()">No</button>
 </div>
 
 <script>
 let yesSize = 22;
+let noSize = 22;
+let noClicks = 0;
 
-function moveButton() {
+function handleNo() {
     const noBtn = document.getElementById("noBtn");
+    const yesBtn = document.getElementById("yesBtn");
     const container = document.querySelector(".button-container");
 
+    noClicks++;
+
+    // Increase YES size
+    yesSize += 5;
+    yesBtn.style.fontSize = yesSize + "px";
+    yesBtn.style.padding = (yesSize/1.2) + "px " + (yesSize*1.5) + "px";
+
+    // Decrease NO size
+    noSize -= 3;
+    if (noSize > 5) {
+        noBtn.style.fontSize = noSize + "px";
+        noBtn.style.padding = (noSize/1.2) + "px " + (noSize*1.2) + "px";
+    }
+
+    // Move NO randomly
     const maxWidth = container.offsetWidth - noBtn.offsetWidth;
     const maxHeight = container.offsetHeight - noBtn.offsetHeight;
 
@@ -112,8 +130,10 @@ function moveButton() {
     noBtn.style.left = randomX + "px";
     noBtn.style.top = randomY + "px";
 
-    yesSize += 3;
-    document.getElementById("yesBtn").style.fontSize = yesSize + "px";
+    // After 6 tries → remove NO button
+    if (noClicks >= 6) {
+        noBtn.style.display = "none";
+    }
 }
 
 function sayYes() {
